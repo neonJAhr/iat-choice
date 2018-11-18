@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My experiment</title>
+    <script src="jspsych-6.0.5/jspsych.js"></script>
+    <script src="jspsych-6.0.5/plugins/jspsych-html-keyboard-response.js"></script>
+    <script src="jspsych-6.0.5/plugins/jspsych-image-keyboard-response.js"></script>
+    <link href="jspsych-6.0.5/css/jspsych.css" rel="stylesheet" type="text/css"></link>
+  </head>
+  
+  <body></body>
+  <script>
+
+    /* create timeline */
+    var timeline = [];
+
+    /* define welcome message trial */
+    var welcome = {
+      type: "html-keyboard-response",
+      stimulus: "Welcome to the experiment. Press any key to begin."
+    };
+    timeline.push(welcome);
+
+    /* define instructions trial */
+    var instructions = {
+		type: "html-keyboard-response",
+		stimulus: "<p>In this experiment, we ask you to rate combinations of adjectives with religions" +
+          "</p><p>If you believe the words <strong>match</strong>, " +
+          "press the letter \"W\" on the keyboard as fast as you can.</p>" +
+          "<p>If you believe the words <strong>do not match</strong>, press the letter \"O\" " +
+          "as fast as you can.</p>" +
+		  
+		  "<p>Next, you will see the different icons used to depict the religions." + 
+		  "<p><br><br>Press the Enter key to begin.</p>",
+		choices: [13],
+    };
+    timeline.push(instructions);
+
+	var religions = {
+	  type: "html-keyboard-response",
+	  stimulus:
+		  "<p>These are the six beliefs* that you will be questioned on:</p>" + 
+		  "<strong>Religious Icons</strong>:" + 
+		  "<div>"+"<figure><img src='Religious Icons/first three_s.png'></figure>" + "<figure><img src='Religious Icons/second three_s.png'></figure></div>" +
+		  "<span style='color: red'><strong>If you do not recognize/do not know any of these religions, please contact your instructor.</strong><span style='color: black'>"	+	  
+          "<p>Press the Enter key to continue.</p>" + 
+		  "<span style='font-size:14px'>*Atheism is by definition neither a religion nor a belief system, but for this experiment we grouped it together with other religions. We apologize if this caused irritation/confusion.",
+      choices: [13],
+	};
+	timeline.push(religions);
+	
+	var demo_instructions = {
+	type: "html-keyboard-response",
+    stimulus:   "<div style='position: absolute; top: 18%; left: 20%'><p>Press W for:<br><strong>ITEMS MATCH</strong></p></div>" +
+				"<div style='position: absolute; top: 18%; right: 20%'><p>Press O for:<br><strong>ITEMS DO<br>NOT MATCH</strong></p></div>" +
+				"<div style='position: relative; top: 52%; margin-left: auto; margin-right: auto'>Next you will have a simple trial to understand the experiment. " +
+				"Put your left index left finger on the <strong>W</strong> key and your right index right finger on the <strong>O</strong> key." +
+				"<br><br>Items will appear one at a time.<br><br>" + 
+				"For this test trial, there will be a correct response. If you make a mistake, a red X will appear. Go as fast as you can while being accurate.<br><br>" + 
+				"Press the any key when you are ready to start.</div>",
+				
+	};
+	timeline.push(demo_instructions);
+    /* test trials */
+
+    var test_stimuli = [
+      { stimulus: "<div><figure><img src='Religious Icons/Islam.png'><figcaption><strong>Islam</strong></figcaption></figure></div>", data: { test_part: 'test', correct_response: 'w' } },
+      { stimulus: "<div><figure><img src='Religious Icons/Buddhism.png'><figcaption><strong>Hinduism</strong></figcaption></figure></div>", data: { test_part: 'test', correct_response: 'o' } }
+    ];
+
+    var fixation = {
+      type: 'html-keyboard-response',
+      stimulus: '<div style="font-size:60px;">+</div>',
+      choices: jsPsych.NO_KEYS,
+      trial_duration: 500,
+      data: {test_part: 'fixation'}
+    }
+
+	/* List of adjectives
+	"<strong>Adjectives</strong>: <br><strong>virtuous – liberating – fair/equitable - authoritarian – prejudiced – fanatical</strong>" */
+	
+    var test = {
+	
+      type: "html-keyboard-response",
+      stimulus: jsPsych.timelineVariable('stimulus'),
+      choices: ['w', 'o'],
+	  html_when_wrong: '<span style="color: red; font-size: 80px">X</span>',
+	  force_correct_key_press: true,
+      display_feedback: true,
+      trial_duration: null,
+      left_category_key: 'W',
+      right_category_key: 'O',
+      left_category_label: ['ITEM FITS'],
+      right_category_label: ['ITEM DOES NOT FIT'],
+      response_ends_trial: true,
+      data: jsPsych.timelineVariable('data'),
+      on_finish: function(data){
+        data.correct = data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode(data.correct_response);
+      },
+    }
+
+    var test_procedure = {
+      timeline: [fixation, test],
+      timeline_variables: test_stimuli,
+      repetitions: 3,
+      randomize_order: true
+    }
+    timeline.push(test_procedure);
+
+    /* define debrief */
+
+    var debrief_block = {
+      type: "html-keyboard-response",
+      stimulus: function() {
+
+        var trials = jsPsych.data.get().filter({test_part: 'test'});
+        var correct_trials = trials.filter({correct: true});
+        var accuracy = Math.round(correct_trials.count() / trials.count() * 100);
+        var rt = Math.round(correct_trials.select('rt').mean());
+
+        return "<p>You responded correctly on "+accuracy+"% of the trials.</p>"+
+        "<p>Your average response time was "+rt+"ms.</p>"+
+        "<p>Press any key to complete the experiment. Thank you!</p>";
+
+      }
+    };
+    timeline.push(debrief_block);
+
+    /* start the experiment */
+    jsPsych.init({
+      timeline: timeline,
+      on_finish: function() {
+        jsPsych.data.displayData();
+      }
+    });
+  </script>
+</html>
