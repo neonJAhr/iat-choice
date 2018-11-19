@@ -151,7 +151,7 @@
     jsPsych.init({
       timeline: timeline,
       on_finish: function() {
-       jsPsych.data.displayData();
+       console.log(jsPsych.data.get().csv());
       }
     });
   </script>
