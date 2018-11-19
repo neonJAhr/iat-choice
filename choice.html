@@ -110,10 +110,17 @@
     }
     timeline.push(test_procedure);
 
+    function saveData(name, data){
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', 'write_data.php'); // 'write_data.php' is the path to the php file described above.
+      xhr.setRequestHeader('Content-Type', 'application/json');
+      xhr.send(JSON.stringify({filename: name, filedata: data}));
+    }
+
     var save = {
       type: 'call-function',
       func: function(){
-        saveData("experiment_data", jsPsych.data.get().csv());
+        saveData( "experiment_data", jsPsych.data.get().csv());
       }
     }
     timeline.push(save);
@@ -139,18 +146,12 @@
     };
     timeline.push(debrief_block);
 
-    function saveData(name, data){
-      var xhr = new XMLHttpRequest();
-      xhr.open('POST', 'write_data.php'); // 'write_data.php' is the path to the php file described above.
-      xhr.setRequestHeader('Content-Type', 'application/json');
-      xhr.send(JSON.stringify({filename: name, filedata: data}));
-    }
-
+  
     /* start the experiment */
     jsPsych.init({
       timeline: timeline,
       on_finish: function() {
-        jsPsych.data.get().csv()
+        jsPsych.data.get().csv();
       }
     });
   </script>
