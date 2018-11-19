@@ -14,6 +14,8 @@
     /* create timeline */
     var timeline = [];
 
+    var subject_id = jsPsych.randomization.randomID(15);
+
     /* define welcome message trial */
     var welcome = {
       type: "html-keyboard-response",
@@ -107,6 +109,16 @@
     }
     timeline.push(test_procedure);
 
+    var save = {
+      type: 'call-function',
+      func: function(){
+        saveData("experiment_data", jsPsych.data.get().csv());
+      }
+    }
+    timeline.push(save);
+
+
+
     /* define debrief */
 
     var debrief_block = {
@@ -137,7 +149,7 @@
     jsPsych.init({
       timeline: timeline,
       on_finish: function() {
-        saveData("experiment_data", jsPsych.data.get().csv());
+        
       }
     });
   </script>
