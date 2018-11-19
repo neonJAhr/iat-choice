@@ -1,2 +1,2 @@
 
-<?php include_once("./choice.html"); ?>
+<?php include_once("choice.html"); ?>
