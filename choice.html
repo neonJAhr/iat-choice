@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>My experiment</title>
+    <title>iat-choice</title>
     <script src="jspsych-6.0.5/jspsych.js"></script>
+	<script src="jspsych-6.0.5//plugins/jspsych-iat-image.js"></script>
+	<script src="jspsych-6.0.5//plugins/jspsych-iat-html.js"></script>
     <script src="jspsych-6.0.5/plugins/jspsych-html-keyboard-response.js"></script>
     <script src="jspsych-6.0.5/plugins/jspsych-image-keyboard-response.js"></script>
-    <script src="jspsych-6.0.5/plugins/jspsych-call-function.js"></script>
     <link href="jspsych-6.0.5/css/jspsych.css" rel="stylesheet" type="text/css"></link>
   </head>
   
@@ -15,8 +16,8 @@
     /* create timeline */
     var timeline = [];
 
-    var subject_id = jsPsych.randomization.randomID(15);
-
+	var subject_id = jsPsych.randomization.randomID(15);
+	
     /* define welcome message trial */
     var welcome = {
       type: "html-keyboard-response",
@@ -60,99 +61,129 @@
 				"Put your left index left finger on the <strong>W</strong> key and your right index right finger on the <strong>O</strong> key." +
 				"<br><br>Items will appear one at a time.<br><br>" + 
 				"For this test trial, there will be a correct response. If you make a mistake, a red X will appear. Go as fast as you can while being accurate.<br><br>" + 
-				"Press the any key when you are ready to start.</div>",
-				
+				"Press either <strong>W</strong> or <strong>O</strong> when you are ready to start.</div>",
+    choices: ['w','o'],
 	};
 	timeline.push(demo_instructions);
     /* test trials */
 
-    var test_stimuli = [
-      { stimulus: "<div><figure><img src='Religious Icons/Islam.png'><figcaption><strong>Islam</strong></figcaption></figure></div>", data: { test_part: 'test', correct_response: 'w' } },
-      { stimulus: "<div><figure><img src='Religious Icons/Buddhism.png'><figcaption><strong>Hinduism</strong></figcaption></figure></div>", data: { test_part: 'test', correct_response: 'o' } }
-    ];
-
-    var fixation = {
-      type: 'html-keyboard-response',
-      stimulus: '<div style="font-size:60px;">+</div>',
-      choices: jsPsych.NO_KEYS,
-      trial_duration: 500,
-      data: {test_part: 'fixation'}
-    }
-
-	/* List of adjectives
-	"<strong>Adjectives</strong>: <br><strong>virtuous – liberating – fair/equitable - authoritarian – prejudiced – fanatical</strong>" */
 	
-    var test = {
-	
-      type: "html-keyboard-response",
+    var demo_test = {
+	timeline: [
+	{
+      type: "iat-html",
       stimulus: jsPsych.timelineVariable('stimulus'),
-      choices: ['w', 'o'],
-	  html_when_wrong: '<span style="color: red; font-size: 80px">X</span>',
+	  stim_key_association: jsPsych.timelineVariable('stim_key_association'),
+	  html_when_wrong: '<span style="position: absolute; top: 30%; left: 50%; color: red; font-size: 80px">X</span>',
 	  force_correct_key_press: true,
       display_feedback: true,
       trial_duration: null,
       left_category_key: 'W',
       right_category_key: 'O',
-      left_category_label: ['ITEM FITS'],
-      right_category_label: ['ITEM DOES NOT FIT'],
+      left_category_label: ['ITEMS MATCH'],
+      right_category_label: ['ITEMS DO<br>NOT MATCH'],
       response_ends_trial: true,
-      data: jsPsych.timelineVariable('data'),
-      on_finish: function(data){
-        data.correct = data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode(data.correct_response);
-      },
-    }
-
-    var test_procedure = {
-      timeline: [fixation, test],
-      timeline_variables: test_stimuli,
-      repetitions: 3,
+	  bottom_instructions: " ",
+      data: jsPsych.timelineVariable('test'),
+	  } ],
+	  timeline_variables: [
+	  { stimulus: "<div><style=position: absolute; top: 30%><figure><img src='Religious Icons/Islam.png'><figcaption><strong>Islam</strong></figcaption></figure></div>", stim_key_association: "left"},
+      { stimulus: "<div><style=position: absolute; top: 30%><figure><img src='Religious Icons/Buddhism.png'><figcaption><strong>Hinduism</strong></figcaption></figure></div>", stim_key_association: "right"},
+	  { stimulus: "<div><style=position: absolute; top: 30%><figure><img src='Religious Icons/Christianity.png'><figcaption><strong>Judaism</strong></figcaption></figure></div>", stim_key_association: "right"},
+	  { stimulus: "<div><style=position: absolute; top: 30%><figure><img src='Religious Icons/Atheism.png'><figcaption><strong>Buddhism</strong></figcaption></figure></div>", stim_key_association: "right"},
+	  { stimulus: "<div><style=position: absolute; top: 30%><figure><img src='Religious Icons/Hinduism.png'><figcaption><strong>Hinduism</strong></figcaption></figure></div>", stim_key_association: "left"}
+	  ],
+	  repetitions: 1,
       randomize_order: true
     }
-    timeline.push(test_procedure);
+	timeline.push(demo_test);
+	
 
-    function saveData(name, data){
-      var xhr = new XMLHttpRequest();
-      xhr.open('POST', 'write_data.php'); // 'write_data.php' is the path to the php file described above.
-      xhr.setRequestHeader('Content-Type', 'application/json');
-      xhr.send(JSON.stringify({filename: name, filedata: data}));
-    }
+	/* Actual Experiment
+	
+	List of adjectives
+	"<strong>Adjectives</strong>: <br><strong>virtuous – liberating – fair - rigid – prejudiced – hierarchical</strong>" */
+	
+	var intruc_real = {
+	type: "html-keyboard-response",
+	stimulus: 	"<div style='position: relative; top: 52%; margin-left: auto; margin-right: auto'><p>Now you will do the actual experiment. " +
+				"<br>This part does not have a correct or incorrect answer. Rather, you choose whether the word matches your belief about the religion.</p>" +
+				
+				"<br>Keep your left index left finger on the <strong>W</strong> key and your right index right finger on the <strong>O</strong> key." +
+				"<br>Items will again appear one at a time.<br><br></div>" + 
+				"Press either <strong>W</strong> or <strong>O</strong> when you are ready to start.</div>",
+	choices: ['w','o']
+	}
+	timeline.push(intruc_real);
 
-    var save = {
-      type: 'call-function',
-      func: function(){
-        saveData( "experiment_data", jsPsych.data.get().csv());
-      }
-    }
-    timeline.push(save);
-
-
-
+	var real_experiment = {
+	timeline: [ {
+	type: "html-keyboard-response",
+	stimulus: jsPsych.timelineVariable('stimulus'),
+	post_trial_gap: 100,
+	data: jsPsych.timelineVariable('real'),
+	} ],
+	choices: [87,79],
+	timeline_variables: [
+	{stimulus: "<div><figure><img src='Religious Icons/Atheism.png'><figcaption><strong>hierarchical</strong></figcaption></figure></div>" + "<div style='position: absolute; top: 18%; left: 20%'><p>Press W for:<br><strong>ITEMS MATCH</strong></p></div>" + "<div style='position: absolute; top: 18%; right: 20%'><p>Press O for:<br><strong>ITEMS DO<br>NOT MATCH</strong></p></div>"},
+	{stimulus: "<div><figure><img src='Religious Icons/Buddhism.png'><figcaption><strong>hierarchical</strong></figcaption></figure></div>" + "<div style='position: absolute; top: 18%; left: 20%'><p>Press W for:<br><strong>ITEMS MATCH</strong></p></div>" + "<div style='position: absolute; top: 18%; right: 20%'><p>Press O for:<br><strong>ITEMS DO<br>NOT MATCH</strong></p></div>"},
+	{stimulus: "<div><figure><img src='Religious Icons/Christianity.png'><figcaption><strong>hierarchical</strong></figcaption></figure></div>" + "<div style='position: absolute; top: 18%; left: 20%'><p>Press W for:<br><strong>ITEMS MATCH</strong></p></div>" + "<div style='position: absolute; top: 18%; right: 20%'><p>Press O for:<br><strong>ITEMS DO<br>NOT MATCH</strong></p></div>"},
+	{stimulus: "<div><figure><img src='Religious Icons/Hinduism.png'><figcaption><strong>hierarchical</strong></figcaption></figure></div>" + "<div style='position: absolute; top: 18%; left: 20%'><p>Press W for:<br><strong>ITEMS MATCH</strong></p></div>" + "<div style='position: absolute; top: 18%; right: 20%'><p>Press O for:<br><strong>ITEMS DO<br>NOT MATCH</strong></p></div>"},
+	{stimulus: "<div><figure><img src='Religious Icons/Islam.png'><figcaption><strong>hierarchical</strong></figcaption></figure></div>" + "<div style='position: absolute; top: 18%; left: 20%'><p>Press W for:<br><strong>ITEMS MATCH</strong></p></div>" + "<div style='position: absolute; top: 18%; right: 20%'><p>Press O for:<br><strong>ITEMS DO<br>NOT MATCH</strong></p></div>"},
+	{stimulus: "<div><figure><img src='Religious Icons/Judaism.png'><figcaption><strong>hierarchical</strong></figcaption></figure></div>" + "<div style='position: absolute; top: 18%; left: 20%'><p>Press W for:<br><strong>ITEMS MATCH</strong></p></div>" + "<div style='position: absolute; top: 18%; right: 20%'><p>Press O for:<br><strong>ITEMS DO<br>NOT MATCH</strong></p></div>"},
+	{stimulus: "<div><figure><img src='Religious Icons/Atheism.png'><figcaption><strong>fair</strong></figcaption></figure></div>" + "<div style='position: absolute; top: 18%; left: 20%'><p>Press W for:<br><strong>ITEMS MATCH</strong></p></div>" + "<div style='position: absolute; top: 18%; right: 20%'><p>Press O for:<br><strong>ITEMS DO<br>NOT MATCH</strong></p></div>"},
+	{stimulus: "<div><figure><img src='Religious Icons/Buddhism.png'><figcaption><strong>fair</strong></figcaption></figure></div>" + "<div style='position: absolute; top: 18%; left: 20%'><p>Press W for:<br><strong>ITEMS MATCH</strong></p></div>" + "<div style='position: absolute; top: 18%; right: 20%'><p>Press O for:<br><strong>ITEMS DO<br>NOT MATCH</strong></p></div>"},
+	{stimulus: "<div><figure><img src='Religious Icons/Christianity.png'><figcaption><strong>fair</strong></figcaption></figure></div>" + "<div style='position: absolute; top: 18%; left: 20%'><p>Press W for:<br><strong>ITEMS MATCH</strong></p></div>" + "<div style='position: absolute; top: 18%; right: 20%'><p>Press O for:<br><strong>ITEMS DO<br>NOT MATCH</strong></p></div>"},
+	{stimulus: "<div><figure><img src='Religious Icons/Hinduism.png'><figcaption><strong>fair</strong></figcaption></figure></div>" + "<div style='position: absolute; top: 18%; left: 20%'><p>Press W for:<br><strong>ITEMS MATCH</strong></p></div>" + "<div style='position: absolute; top: 18%; right: 20%'><p>Press O for:<br><strong>ITEMS DO<br>NOT MATCH</strong></p></div>"},
+	{stimulus: "<div><figure><img src='Religious Icons/Islam.png'><figcaption><strong>fair</strong></figcaption></figure></div>" + "<div style='position: absolute; top: 18%; left: 20%'><p>Press W for:<br><strong>ITEMS MATCH</strong></p></div>" + "<div style='position: absolute; top: 18%; right: 20%'><p>Press O for:<br><strong>ITEMS DO<br>NOT MATCH</strong></p></div>"},
+	{stimulus: "<div><figure><img src='Religious Icons/Judaism.png'><figcaption><strong>fair</strong></figcaption></figure></div>" + "<div style='position: absolute; top: 18%; left: 20%'><p>Press W for:<br><strong>ITEMS MATCH</strong></p></div>" + "<div style='position: absolute; top: 18%; right: 20%'><p>Press O for:<br><strong>ITEMS DO<br>NOT MATCH</strong></p></div>"},
+	{stimulus: "<div><figure><img src='Religious Icons/Atheism.png'><figcaption><strong>rigid</strong></figcaption></figure></div>" + "<div style='position: absolute; top: 18%; left: 20%'><p>Press W for:<br><strong>ITEMS MATCH</strong></p></div>" + "<div style='position: absolute; top: 18%; right: 20%'><p>Press O for:<br><strong>ITEMS DO<br>NOT MATCH</strong></p></div>"},
+	{stimulus: "<div><figure><img src='Religious Icons/Buddhism.png'><figcaption><strong>rigid</strong></figcaption></figure></div>" + "<div style='position: absolute; top: 18%; left: 20%'><p>Press W for:<br><strong>ITEMS MATCH</strong></p></div>" + "<div style='position: absolute; top: 18%; right: 20%'><p>Press O for:<br><strong>ITEMS DO<br>NOT MATCH</strong></p></div>"},
+	{stimulus: "<div><figure><img src='Religious Icons/Christianity.png'><figcaption><strong>rigid</strong></figcaption></figure></div>" + "<div style='position: absolute; top: 18%; left: 20%'><p>Press W for:<br><strong>ITEMS MATCH</strong></p></div>" + "<div style='position: absolute; top: 18%; right: 20%'><p>Press O for:<br><strong>ITEMS DO<br>NOT MATCH</strong></p></div>"},
+	{stimulus: "<div><figure><img src='Religious Icons/Hinduism.png'><figcaption><strong>rigid</strong></figcaption></figure></div>" + "<div style='position: absolute; top: 18%; left: 20%'><p>Press W for:<br><strong>ITEMS MATCH</strong></p></div>" + "<div style='position: absolute; top: 18%; right: 20%'><p>Press O for:<br><strong>ITEMS DO<br>NOT MATCH</strong></p></div>"},
+	{stimulus: "<div><figure><img src='Religious Icons/Islam.png'><figcaption><strong>rigid</strong></figcaption></figure></div>" + "<div style='position: absolute; top: 18%; left: 20%'><p>Press W for:<br><strong>ITEMS MATCH</strong></p></div>" + "<div style='position: absolute; top: 18%; right: 20%'><p>Press O for:<br><strong>ITEMS DO<br>NOT MATCH</strong></p></div>"},
+	{stimulus: "<div><figure><img src='Religious Icons/Judaism.png'><figcaption><strong>rigid</strong></figcaption></figure></div>" + "<div style='position: absolute; top: 18%; left: 20%'><p>Press W for:<br><strong>ITEMS MATCH</strong></p></div>" + "<div style='position: absolute; top: 18%; right: 20%'><p>Press O for:<br><strong>ITEMS DO<br>NOT MATCH</strong></p></div>"},
+	{stimulus: "<div><figure><img src='Religious Icons/Atheism.png'><figcaption><strong>liberating</strong></figcaption></figure></div>" + "<div style='position: absolute; top: 18%; left: 20%'><p>Press W for:<br><strong>ITEMS MATCH</strong></p></div>" + "<div style='position: absolute; top: 18%; right: 20%'><p>Press O for:<br><strong>ITEMS DO<br>NOT MATCH</strong></p></div>"},
+	{stimulus: "<div><figure><img src='Religious Icons/Buddhism.png'><figcaption><strong>liberating</strong></figcaption></figure></div>" + "<div style='position: absolute; top: 18%; left: 20%'><p>Press W for:<br><strong>ITEMS MATCH</strong></p></div>" + "<div style='position: absolute; top: 18%; right: 20%'><p>Press O for:<br><strong>ITEMS DO<br>NOT MATCH</strong></p></div>"},
+	{stimulus: "<div><figure><img src='Religious Icons/Christianity.png'><figcaption><strong>liberating</strong></figcaption></figure></div>" + "<div style='position: absolute; top: 18%; left: 20%'><p>Press W for:<br><strong>ITEMS MATCH</strong></p></div>" + "<div style='position: absolute; top: 18%; right: 20%'><p>Press O for:<br><strong>ITEMS DO<br>NOT MATCH</strong></p></div>"},
+	{stimulus: "<div><figure><img src='Religious Icons/Hinduism.png'><figcaption><strong>liberating</strong></figcaption></figure></div>" + "<div style='position: absolute; top: 18%; left: 20%'><p>Press W for:<br><strong>ITEMS MATCH</strong></p></div>" + "<div style='position: absolute; top: 18%; right: 20%'><p>Press O for:<br><strong>ITEMS DO<br>NOT MATCH</strong></p></div>"},
+	{stimulus: "<div><figure><img src='Religious Icons/Islam.png'><figcaption><strong>liberating</strong></figcaption></figure></div>" + "<div style='position: absolute; top: 18%; left: 20%'><p>Press W for:<br><strong>ITEMS MATCH</strong></p></div>" + "<div style='position: absolute; top: 18%; right: 20%'><p>Press O for:<br><strong>ITEMS DO<br>NOT MATCH</strong></p></div>"},
+	{stimulus: "<div><figure><img src='Religious Icons/Judaism.png'><figcaption><strong>liberating</strong></figcaption></figure></div>" + "<div style='position: absolute; top: 18%; left: 20%'><p>Press W for:<br><strong>ITEMS MATCH</strong></p></div>" + "<div style='position: absolute; top: 18%; right: 20%'><p>Press O for:<br><strong>ITEMS DO<br>NOT MATCH</strong></p></div>"},
+	{stimulus: "<div><figure><img src='Religious Icons/Atheism.png'><figcaption><strong>prejudiced</strong></figcaption></figure></div>" + "<div style='position: absolute; top: 18%; left: 20%'><p>Press W for:<br><strong>ITEMS MATCH</strong></p></div>" + "<div style='position: absolute; top: 18%; right: 20%'><p>Press O for:<br><strong>ITEMS DO<br>NOT MATCH</strong></p></div>"},
+	{stimulus: "<div><figure><img src='Religious Icons/Buddhism.png'><figcaption><strong>prejudiced</strong></figcaption></figure></div>" + "<div style='position: absolute; top: 18%; left: 20%'><p>Press W for:<br><strong>ITEMS MATCH</strong></p></div>" + "<div style='position: absolute; top: 18%; right: 20%'><p>Press O for:<br><strong>ITEMS DO<br>NOT MATCH</strong></p></div>"},
+	{stimulus: "<div><figure><img src='Religious Icons/Christianity.png'><figcaption><strong>prejudiced</strong></figcaption></figure></div>" + "<div style='position: absolute; top: 18%; left: 20%'><p>Press W for:<br><strong>ITEMS MATCH</strong></p></div>" + "<div style='position: absolute; top: 18%; right: 20%'><p>Press O for:<br><strong>ITEMS DO<br>NOT MATCH</strong></p></div>"},
+	{stimulus: "<div><figure><img src='Religious Icons/Hinduism.png'><figcaption><strong>prejudiced</strong></figcaption></figure></div>" + "<div style='position: absolute; top: 18%; left: 20%'><p>Press W for:<br><strong>ITEMS MATCH</strong></p></div>" + "<div style='position: absolute; top: 18%; right: 20%'><p>Press O for:<br><strong>ITEMS DO<br>NOT MATCH</strong></p></div>"},
+	{stimulus: "<div><figure><img src='Religious Icons/Islam.png'><figcaption><strong>prejudiced</strong></figcaption></figure></div>" + "<div style='position: absolute; top: 18%; left: 20%'><p>Press W for:<br><strong>ITEMS MATCH</strong></p></div>" + "<div style='position: absolute; top: 18%; right: 20%'><p>Press O for:<br><strong>ITEMS DO<br>NOT MATCH</strong></p></div>"},
+	{stimulus: "<div><figure><img src='Religious Icons/Judaism.png'><figcaption><strong>prejudiced</strong></figcaption></figure></div>" + "<div style='position: absolute; top: 18%; left: 20%'><p>Press W for:<br><strong>ITEMS MATCH</strong></p></div>" + "<div style='position: absolute; top: 18%; right: 20%'><p>Press O for:<br><strong>ITEMS DO<br>NOT MATCH</strong></p></div>"},
+	{stimulus: "<div><figure><img src='Religious Icons/Atheism.png'><figcaption><strong>virtuous</strong></figcaption></figure></div>" + "<div style='position: absolute; top: 18%; left: 20%'><p>Press W for:<br><strong>ITEMS MATCH</strong></p></div>" + "<div style='position: absolute; top: 18%; right: 20%'><p>Press O for:<br><strong>ITEMS DO<br>NOT MATCH</strong></p></div>"},
+	{stimulus: "<div><figure><img src='Religious Icons/Buddhism.png'><figcaption><strong>virtuous</strong></figcaption></figure></div>" + "<div style='position: absolute; top: 18%; left: 20%'><p>Press W for:<br><strong>ITEMS MATCH</strong></p></div>" + "<div style='position: absolute; top: 18%; right: 20%'><p>Press O for:<br><strong>ITEMS DO<br>NOT MATCH</strong></p></div>"},
+	{stimulus: "<div><figure><img src='Religious Icons/Christianity.png'><figcaption><strong>virtuous</strong></figcaption></figure></div>" + "<div style='position: absolute; top: 18%; left: 20%'><p>Press W for:<br><strong>ITEMS MATCH</strong></p></div>" + "<div style='position: absolute; top: 18%; right: 20%'><p>Press O for:<br><strong>ITEMS DO<br>NOT MATCH</strong></p></div>"},
+	{stimulus: "<div><figure><img src='Religious Icons/Hinduism.png'><figcaption><strong>virtuous</strong></figcaption></figure></div>" + "<div style='position: absolute; top: 18%; left: 20%'><p>Press W for:<br><strong>ITEMS MATCH</strong></p></div>" + "<div style='position: absolute; top: 18%; right: 20%'><p>Press O for:<br><strong>ITEMS DO<br>NOT MATCH</strong></p></div>"},
+	{stimulus: "<div><figure><img src='Religious Icons/Islam.png'><figcaption><strong>virtuous</strong></figcaption></figure></div>" + "<div style='position: absolute; top: 18%; left: 20%'><p>Press W for:<br><strong>ITEMS MATCH</strong></p></div>" + "<div style='position: absolute; top: 18%; right: 20%'><p>Press O for:<br><strong>ITEMS DO<br>NOT MATCH</strong></p></div>"},
+	{stimulus: "<div><figure><img src='Religious Icons/Judaism.png'><figcaption><strong>virtuous</strong></figcaption></figure></div>" + "<div style='position: absolute; top: 18%; left: 20%'><p>Press W for:<br><strong>ITEMS MATCH</strong></p></div>" + "<div style='position: absolute; top: 18%; right: 20%'><p>Press O for:<br><strong>ITEMS DO<br>NOT MATCH</strong></p></div>"}
+	],
+	repetitions: 1,
+    randomize_order: true
+	}
+	timeline.push(real_experiment);
     /* define debrief */
 
     var debrief_block = {
       type: "html-keyboard-response",
-      stimulus: function() {
-
-        var trials = jsPsych.data.get().filter({test_part: 'test'});
-        var correct_trials = trials.filter({correct: true});
-        var accuracy = Math.round(correct_trials.count() / trials.count() * 100);
-        var rt = Math.round(correct_trials.select('rt').mean());
-
-        return "<p>You responded correctly on "+accuracy+"% of the trials.</p>"+
-        "<p>Your average response time was "+rt+"ms.</p>"+
-        "<p>Press any key to complete the experiment. Thank you!</p>";
-
-      }
-    };
+      stimulus: "<p>You are done with this part of the experiment!<br>Please write down your randomly generated ID: <span style='font-size:20px; color: green'>"+subject_id+"</p>" +
+        "It ensures your anonimity when we later randomly pick winners for the gift cards!</p>"+
+        "<p>Please leave this page open and call for your instructor. He will explain the next step in the experiment.<br>" +
+		"Thank you for your participation!</p>",
+	  choices: jsPsych.NO_KEYS
+      };
     timeline.push(debrief_block);
 
-  
+	jsPsych.data.addProperties({subject: subject_id});
     /* start the experiment */
     jsPsych.init({
-      timeline: timeline,
+	  timeline: timeline,
       on_finish: function() {
        console.log(jsPsych.data.get().csv());
-      }
-    });
+      }});
   </script>
 </html>
