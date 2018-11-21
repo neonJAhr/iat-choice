@@ -28,10 +28,11 @@
 
 	var rwa_instructions = {
 	type: "html-keyboard-response",
-	stimulus: "<p>Thank you for taking part in our experiment! If you have any questions, you can reach either Arne John at ar.john@jacobs-university.de or Ignacio Muñoz at i.munoz@jacobs-university.de.</p>" +
-	"The participation in this study is absolutely voluntary and you can stop participating at any time. Note that the winner of the raffle will be determined from the randomized anonymous ID in this experiment.<br>In other words, you are forfeiting your chance to win if you choose to stop the participation." +
+	stimulus: "<p>Thank you for taking part in our experiment!<br>If you have any questions, you can reach either <strong>Arne John</strong> at ar.john@jacobs-university.de or <strong>Ignacio Muñoz</strong> at i.munoz@jacobs-university.de.</p>" +
+	"<br>The participation in this study is absolutely voluntary and you can stop participating at any time. Note that the winner of the raffle will be determined from the randomized anonymous ID in this experiment.<br>In other words, you are forfeiting your chance to win if you choose to stop the participation." +
 	"<p><br>In the first part of this experiment, we would like you to fill out a survey.<br>" +
-	"There are no right or wrong answers, and no one is able to see how you answered, since the collected data is anonymized. The data is will be used for academix purposes only." +
+	"The survey will refer to The Divine, this is a placeholder for your preferred deity.<br>" +
+	"There are no right or wrong answers, and no one is able to see how you answered, since the collected data is anonymized. The data is will be used for academic purposes only." +
 	"<br>Due to the limitation of the software used you are unable to go back to previous pages. We apologize but do not think it will affect the experiment in any impactful way." +
 	"<br>If you have any questions, feel free to call for your instructor.</p>" + 
 	"<br><br>Press the Enter key to begin.",
@@ -39,15 +40,15 @@
 	}
 	timeline.push(rwa_instructions);
 	
-	var scale = ["- - - -", "- - -", "- -", "-", "+", "+ +", "+ + +", "+ + + +"];
+	var scale = ["Very Strongly Disagree", "Strongly Disagree", "Moderately Disagree", "Slightly Disagree", "Slightly Agree", "Moderately Agree", "Strongly Agree", "Very Strongly Agree"];
 	
 	var rwa_survey_1 = {
 	type: "survey-likert",
-	preamble: 'Page 1 of 3<br><br>The scale used means: "Very Strongly Disagree" - "Strongly Disagree" - "Moderately Disagree" - "Slightly Disagree" - "Slightly Agree" - "Moderately Agree" - "Strongly Agree" - "Very Strongly Agree"',
+	preamble: '<strong>Page 1 of 3',
 	questions: [{prompt: "1. Homosexuals and feminists should be praised for being brave enough to defy “traditional family values.”", labels: scale, required: true}, 
 				{prompt: "2. There is no “one right way” to live life; everybody has to create their own way.", labels: scale, required: true},
 				{prompt: "3. There are many radical, immoral people in our country today, who are trying to ruin it for their own godless purposes, whom the authorities should put out of action.", labels: scale, required: true},
-				{prompt: "4. Allah's/God’s/Jehova's laws about abortion, pornography and marriage must be strictly followed before it is too late, and those who break them must be strongly punished.", labels: scale, required: true},
+				{prompt: "4. The Divine's laws about abortion, pornography and marriage must be strictly followed before it is too late, and those who break them must be strongly punished.", labels: scale, required: true},
 				{prompt: "5. Some of the best people in our country are those who are challenging our government, criticizing religion, and ignoring the “normal way things are supposed to be done.”", labels: scale, required: true}
 				]
 	}
@@ -55,7 +56,7 @@
 	
 	var rwa_survey_2 = {
 	type: "survey-likert",
-	preamble: 'Page 2 of 3<br><br>The scale used means: "Very Strongly Disagree" - "Strongly Disagree" - "Moderately Disagree" - "Slightly Disagree" - "Slightly Agree" - "Moderately Agree" - "Strongly Agree" - "Very Strongly Agree"',
+	preamble: '<strong>Page 2 of 3',
 	questions: [{prompt: "6. What our country really needs is a strong, determined leader who will crush evil, and take us back to our true path.", labels: scale, required: true},
 				{prompt: "7. The “old-fashioned ways” and the “old-fashioned values” still show the best way to live.", labels: scale, required: true},
 				{prompt: "8. The only way our country can get through the crisis ahead is to get back to our traditional values, put some tough leaders in power, and silence the troublemakers spreading bad ideas.", labels: scale, required: true},
@@ -67,7 +68,7 @@
 	
 	var rwa_survey_3 = {
 	type: "survey-likert",
-	preamble: 'Page 3 of 3<br><br>The scale used means: "Very Strongly Disagree" - "Strongly Disagree" - "Moderately Disagree" - "Slightly Disagree" - "Slightly Agree" - "Moderately Agree" - "Strongly Agree" - "Very Strongly Agree"',
+	preamble: '<strong>Page 3 of 3',
 	questions: [{prompt: "11. Our country will be great if we honor the ways of our forefathers, do what the authorities tell us to do, and get rid of the “rotten apples” who are ruining everything.", labels: scale, required: true},
 				{prompt: "12. You have to admire those who challenged the law and the majority’s view by protesting for women’s abortion rights, for animal rights, or to abolish school prayer.", labels: scale, required: true},
 				{prompt: "13. The established authorities generally turn out to be right about things, while the radicals and protestors are usually just “loud mouths” showing off their ignorance.", labels: scale, required: true},
@@ -110,7 +111,7 @@
     stimulus:   "<div style='position: absolute; top: 18%; left: 20%'><p>Press W for:<br><strong>ITEMS MATCH</strong></p></div>" +
 				"<div style='position: absolute; top: 18%; right: 20%'><p>Press O for:<br><strong>ITEMS DO<br>NOT MATCH</strong></p></div>" +
 				"<div style='position: relative; top: 52%; margin-left: auto; margin-right: auto'>Next you will have a simple trial to understand the experiment. " +
-				"Put your left index left finger on the <strong>W</strong> key and your right index right finger on the <strong>O</strong> key." +
+				"Put your left left finger on the <strong>W</strong> key and your right right finger on the <strong>O</strong> key." +
 				"<br><br>Items will appear one at a time.<br><br>" + 
 				"For this test trial, there will be a correct response. If you make a mistake, a red X will appear. Go as fast as you can while being accurate.<br><br>" + 
 				"Press either <strong>W</strong> or <strong>O</strong> when you are ready to start.</div>",
@@ -180,7 +181,7 @@
 	stimulus: 	"<div style='position: relative; top: 52%; margin-left: auto; margin-right: auto'><p>Now you will do the actual experiment. " +
 				"<br>This part does not have a correct or incorrect answer. Rather, you choose whether the word matches the religion.</p>" +
 				
-				"<br>Keep your left index left finger on the <strong>W</strong> key and your right index right finger on the <strong>O</strong> key." +
+				"<br>Keep your left finger on the <strong>W</strong> key and your right finger on the <strong>O</strong> key." +
 				"<br>Items will again appear one at a time.<br><br></div>" + 
 				"Press either <strong>W</strong> or <strong>O</strong> when you are ready to start.</div>",
 	choices: ['w','o']
@@ -241,7 +242,7 @@
 
     var debrief_block = {
       type: "html-keyboard-response",
-      stimulus: "<p>You are done with this part of the experiment!<br>Please write down your randomly generated ID: <span style='font-size:20px; color: green'>"+subject_id+"</p>" +
+      stimulus: "<p>You are done with this part of the experiment!<br>Please write down your randomly generated subject ID: <span style='font-size:20px; color: green'>"+subject_id+"</p>" +
         "It ensures your anonimity when we later randomly pick winners for the gift cards!</p>"+
         "<p>Please leave this page open and call for your instructor. He will explain the next step in the experiment.<br>" +
 		"Thank you for your participation!</p>",
