@@ -28,9 +28,12 @@
 
 	var rwa_instructions = {
 	type: "html-keyboard-response",
-	stimulus: "In the first part of this experiment, we would like you to fill out this survey.<br>" +
-	"Since some of the items can be considered controvertial, which is why we provide anonimity via a random ID." +
-	"<br>If you have any questions, feel free to call for your instructor." + 
+	stimulus: "<p>Thank you for taking part in our experiment!<br>If you have any questions, you can reach either <strong>Arne John</strong> at ar.john@jacobs-university.de or <strong>Ignacio Muñoz</strong> at i.munoz@jacobs-university.de.</p>" +
+	"<br>The participation in this study is absolutely voluntary and you can stop participating at any time. Note that the winner of the raffle will be determined from the randomized anonymous ID in this experiment.<br>In other words, you are forfeiting your chance to win if you choose to stop the participation." +
+	"<p><br>In the first part of this experiment, we would like you to fill out a survey.<br>" +
+	"There are no right or wrong answers, and no one is able to see how you answered, since the collected data is anonymized. The data is will be used for academic purposes only." +
+	"<br>Due to the limitation of the software used you are unable to go back to previous pages. We apologize but do not think it will affect the experiment in any impactful way." +
+	"<br>If you have any questions, feel free to call for your instructor.</p>" + 
 	"<br><br>Press the Enter key to begin.",
 	choices: [13]
 	}
@@ -40,6 +43,7 @@
 	
 	var rwa_survey_1 = {
 	type: "survey-likert",
+	preamble: '<strong>Page 1 of 3</strong><br>The scale used means: "Very Strongly Disagree" - "Strongly Disagree" - "Moderately Disagree" - "Slightly Disagree" - "Slightly Agree" - "Moderately Agree" - "Strongly Agree" - "Very Strongly Agree"',
 	questions: [{prompt: "1. Homosexuals and feminists should be praised for being brave enough to defy “traditional family values.”", labels: scale, required: true}, 
 				{prompt: "2. There is no “one right way” to live life; everybody has to create their own way.", labels: scale, required: true},
 				{prompt: "3. There are many radical, immoral people in our country today, who are trying to ruin it for their own godless purposes, whom the authorities should put out of action.", labels: scale, required: true},
@@ -51,6 +55,7 @@
 	
 	var rwa_survey_2 = {
 	type: "survey-likert",
+	preamble: '<strong>Page 2 of 3</strong><br>The scale used means: "Very Strongly Disagree" - "Strongly Disagree" - "Moderately Disagree" - "Slightly Disagree" - "Slightly Agree" - "Moderately Agree" - "Strongly Agree" - "Very Strongly Agree"',
 	questions: [{prompt: "6. What our country really needs is a strong, determined leader who will crush evil, and take us back to our true path.", labels: scale, required: true},
 				{prompt: "7. The “old-fashioned ways” and the “old-fashioned values” still show the best way to live.", labels: scale, required: true},
 				{prompt: "8. The only way our country can get through the crisis ahead is to get back to our traditional values, put some tough leaders in power, and silence the troublemakers spreading bad ideas.", labels: scale, required: true},
@@ -62,6 +67,7 @@
 	
 	var rwa_survey_3 = {
 	type: "survey-likert",
+	preamble: '<strong>Page 3 of 3</strong><br>The scale used means: "Very Strongly Disagree" - "Strongly Disagree" - "Moderately Disagree" - "Slightly Disagree" - "Slightly Agree" - "Moderately Agree" - "Strongly Agree" - "Very Strongly Agree"',
 	questions: [{prompt: "11. Our country will be great if we honor the ways of our forefathers, do what the authorities tell us to do, and get rid of the “rotten apples” who are ruining everything.", labels: scale, required: true},
 				{prompt: "12. You have to admire those who challenged the law and the majority’s view by protesting for women’s abortion rights, for animal rights, or to abolish school prayer.", labels: scale, required: true},
 				{prompt: "13. The established authorities generally turn out to be right about things, while the radicals and protestors are usually just “loud mouths” showing off their ignorance.", labels: scale, required: true},
