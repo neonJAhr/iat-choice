@@ -3,8 +3,9 @@
   <head>
     <title>iat-choice</title>
     <script src="jspsych-6.0.5/jspsych.js"></script>
-	<script src="jspsych-6.0.5//plugins/jspsych-iat-image.js"></script>
-	<script src="jspsych-6.0.5//plugins/jspsych-iat-html.js"></script>
+    <script src="jspsych-6.0.5/plugins/jspsych-survey-likert.js"></script>
+	<script src="jspsych-6.0.5/plugins/jspsych-iat-image.js"></script>
+	<script src="jspsych-6.0.5/plugins/jspsych-iat-html.js"></script>
     <script src="jspsych-6.0.5/plugins/jspsych-html-keyboard-response.js"></script>
     <script src="jspsych-6.0.5/plugins/jspsych-image-keyboard-response.js"></script>
     <link href="jspsych-6.0.5/css/jspsych.css" rel="stylesheet" type="text/css"></link>
@@ -16,7 +17,7 @@
     /* create timeline */
     var timeline = [];
 
-	var subject_id = jsPsych.randomization.randomID(15);
+	var subject_id = jsPsych.randomization.randomID(8);
 	
     /* define welcome message trial */
     var welcome = {
@@ -25,13 +26,58 @@
     };
     timeline.push(welcome);
 
+	var rwa_instructions = {
+	type: "html-keyboard-response",
+	stimulus: "In the first part of this experiment, we would like you to fill out this survey.<br>" +
+	"Since some of the items can be considered controvertial, which is why we provide anonimity via a random ID." +
+	"<br>If you have any questions, feel free to call for your instructor." + 
+	"<br><br>Press the Enter key to begin.",
+	choices: [13]
+	}
+	timeline.push(rwa_instructions);
+	
+	var scale = ["Very Strongly Disagree", "Strongly Disagree", "Moderately Disagree", "Slightly Disagree", "Slightly Agree", "Moderately Agree", "Strongly Agree", "Very Strongly Agree"];
+	
+	var rwa_survey_1 = {
+	type: "survey-likert",
+	questions: [{prompt: "1. Homosexuals and feminists should be praised for being brave enough to defy “traditional family values.”", labels: scale, required: true}, 
+				{prompt: "2. There is no “one right way” to live life; everybody has to create their own way.", labels: scale, required: true},
+				{prompt: "3. There are many radical, immoral people in our country today, who are trying to ruin it for their own godless purposes, whom the authorities should put out of action.", labels: scale, required: true},
+				{prompt: "4. Allah's/God’s/Jehova's laws about abortion, pornography and marriage must be strictly followed before it is too late, and those who break them must be strongly punished.", labels: scale, required: true},
+				{prompt: "5. Some of the best people in our country are those who are challenging our government, criticizing religion, and ignoring the “normal way things are supposed to be done.”", labels: scale, required: true}
+				]
+	}
+	timeline.push(rwa_survey_1);
+	
+	var rwa_survey_2 = {
+	type: "survey-likert",
+	questions: [{prompt: "6. What our country really needs is a strong, determined leader who will crush evil, and take us back to our true path.", labels: scale, required: true},
+				{prompt: "7. The “old-fashioned ways” and the “old-fashioned values” still show the best way to live.", labels: scale, required: true},
+				{prompt: "8. The only way our country can get through the crisis ahead is to get back to our traditional values, put some tough leaders in power, and silence the troublemakers spreading bad ideas.", labels: scale, required: true},
+				{prompt: "9. Women should have to promise to obey their husbands when they get married.", labels: scale, required: true},
+				{prompt: "10. Our country needs free thinkers who have the courage to defy traditional ways, even if this upsets many people.", labels: scale, required: true}
+				]
+	}
+	timeline.push(rwa_survey_2);
+	
+	var rwa_survey_3 = {
+	type: "survey-likert",
+	questions: [{prompt: "11. Our country will be great if we honor the ways of our forefathers, do what the authorities tell us to do, and get rid of the “rotten apples” who are ruining everything.", labels: scale, required: true},
+				{prompt: "12. You have to admire those who challenged the law and the majority’s view by protesting for women’s abortion rights, for animal rights, or to abolish school prayer.", labels: scale, required: true},
+				{prompt: "13. The established authorities generally turn out to be right about things, while the radicals and protestors are usually just “loud mouths” showing off their ignorance.", labels: scale, required: true},
+				{prompt: "14. Everyone should have their own lifestyle, religious beliefs, and sexual preferences, even if it makes them different from everyone else.", labels: scale, required: true},
+				{prompt: "15. Atheists and others who have rebelled against the established religions are no doubt every bit as good and virtuous as those who attend church regularly.", labels: scale, required: true}
+				]
+	}
+	timeline.push(rwa_survey_3);
+	
     /* define instructions trial */
     var instructions = {
 		type: "html-keyboard-response",
-		stimulus: "<p>In this experiment, we ask you to rate combinations of adjectives with religions" +
-          "</p><p>If you believe the words <strong>match</strong>, " +
+		stimulus: "<p>Very good! Next, we ask you to rate combinations of adjectives with religions." +
+          "</p><p>If you believe the items <strong>match</strong>, " +
           "press the letter \"W\" on the keyboard as fast as you can.</p>" +
-          "<p>If you believe the words <strong>do not match</strong>, press the letter \"O\" " +
+          "<p>If you believe the items <strong>do not match</strong>, press the letter \"O\" " +
           "as fast as you can.</p>" +
 		  
 		  "<p>Next, you will see the different icons used to depict the religions." + 
@@ -88,10 +134,29 @@
 	  } ],
 	  timeline_variables: [
 	  { stimulus: "<div><style=position: absolute; top: 30%><figure><img src='Religious Icons/Islam.png'><figcaption><strong>Islam</strong></figcaption></figure></div>", stim_key_association: "left"},
-      { stimulus: "<div><style=position: absolute; top: 30%><figure><img src='Religious Icons/Buddhism.png'><figcaption><strong>Hinduism</strong></figcaption></figure></div>", stim_key_association: "right"},
-	  { stimulus: "<div><style=position: absolute; top: 30%><figure><img src='Religious Icons/Christianity.png'><figcaption><strong>Judaism</strong></figcaption></figure></div>", stim_key_association: "right"},
+	  { stimulus: "<div><style=position: absolute; top: 30%><figure><img src='Religious Icons/Islam.png'><figcaption><strong>Islam</strong></figcaption></figure></div>", stim_key_association: "left"},
+	  { stimulus: "<div><style=position: absolute; top: 30%><figure><img src='Religious Icons/Atheism.png'><figcaption><strong>Atheism</strong></figcaption></figure></div>", stim_key_association: "left"},
+	  { stimulus: "<div><style=position: absolute; top: 30%><figure><img src='Religious Icons/Atheism.png'><figcaption><strong>Atheism</strong></figcaption></figure></div>", stim_key_association: "left"},
+	  { stimulus: "<div><style=position: absolute; top: 30%><figure><img src='Religious Icons/Buddhism.png'><figcaption><strong>Buddhism</strong></figcaption></figure></div>", stim_key_association: "left"},
+	  { stimulus: "<div><style=position: absolute; top: 30%><figure><img src='Religious Icons/Buddhism.png'><figcaption><strong>Buddhism</strong></figcaption></figure></div>", stim_key_association: "left"},
+	  { stimulus: "<div><style=position: absolute; top: 30%><figure><img src='Religious Icons/Christianity.png'><figcaption><strong>Christianity</strong></figcaption></figure></div>", stim_key_association: "left"},
+	  { stimulus: "<div><style=position: absolute; top: 30%><figure><img src='Religious Icons/Christianity.png'><figcaption><strong>Christianity</strong></figcaption></figure></div>", stim_key_association: "left"},
+	  { stimulus: "<div><style=position: absolute; top: 30%><figure><img src='Religious Icons/Hinduism.png'><figcaption><strong>Hinduism</strong></figcaption></figure></div>", stim_key_association: "left"},
+	  { stimulus: "<div><style=position: absolute; top: 30%><figure><img src='Religious Icons/Hinduism.png'><figcaption><strong>Hinduism</strong></figcaption></figure></div>", stim_key_association: "left"},
+	  { stimulus: "<div><style=position: absolute; top: 30%><figure><img src='Religious Icons/Judaism.png'><figcaption><strong>Judaism</strong></figcaption></figure></div>", stim_key_association: "left"},
+	  { stimulus: "<div><style=position: absolute; top: 30%><figure><img src='Religious Icons/Judaism.png'><figcaption><strong>Judaism</strong></figcaption></figure></div>", stim_key_association: "left"},
 	  { stimulus: "<div><style=position: absolute; top: 30%><figure><img src='Religious Icons/Atheism.png'><figcaption><strong>Buddhism</strong></figcaption></figure></div>", stim_key_association: "right"},
-	  { stimulus: "<div><style=position: absolute; top: 30%><figure><img src='Religious Icons/Hinduism.png'><figcaption><strong>Hinduism</strong></figcaption></figure></div>", stim_key_association: "left"}
+	  { stimulus: "<div><style=position: absolute; top: 30%><figure><img src='Religious Icons/Atheism.png'><figcaption><strong>Islam</strong></figcaption></figure></div>", stim_key_association: "right"},
+      { stimulus: "<div><style=position: absolute; top: 30%><figure><img src='Religious Icons/Buddhism.png'><figcaption><strong>Hinduism</strong></figcaption></figure></div>", stim_key_association: "right"},
+      { stimulus: "<div><style=position: absolute; top: 30%><figure><img src='Religious Icons/Buddhism.png'><figcaption><strong>Judaism</strong></figcaption></figure></div>", stim_key_association: "right"},
+      { stimulus: "<div><style=position: absolute; top: 30%><figure><img src='Religious Icons/Islam.png'><figcaption><strong>Hinduism</strong></figcaption></figure></div>", stim_key_association: "right"},
+      { stimulus: "<div><style=position: absolute; top: 30%><figure><img src='Religious Icons/Islam.png'><figcaption><strong>Christianity</strong></figcaption></figure></div>", stim_key_association: "right"},
+	  { stimulus: "<div><style=position: absolute; top: 30%><figure><img src='Religious Icons/Christianity.png'><figcaption><strong>Judaism</strong></figcaption></figure></div>", stim_key_association: "right"},
+	  { stimulus: "<div><style=position: absolute; top: 30%><figure><img src='Religious Icons/Christianity.png'><figcaption><strong>Buddhism</strong></figcaption></figure></div>", stim_key_association: "right"},
+	  { stimulus: "<div><style=position: absolute; top: 30%><figure><img src='Religious Icons/Hinduism.png'><figcaption><strong>Atheism</strong></figcaption></figure></div>", stim_key_association: "right"},
+	  { stimulus: "<div><style=position: absolute; top: 30%><figure><img src='Religious Icons/Hinduism.png'><figcaption><strong>Buddhism</strong></figcaption></figure></div>", stim_key_association: "right"},
+	  { stimulus: "<div><style=position: absolute; top: 30%><figure><img src='Religious Icons/Judaism.png'><figcaption><strong>Atheism</strong></figcaption></figure></div>", stim_key_association: "right"},
+	  { stimulus: "<div><style=position: absolute; top: 30%><figure><img src='Religious Icons/Judaism.png'><figcaption><strong>Christianity</strong></figcaption></figure></div>", stim_key_association: "right"}
 	  ],
 	  repetitions: 1,
       randomize_order: true
@@ -107,7 +172,7 @@
 	var intruc_real = {
 	type: "html-keyboard-response",
 	stimulus: 	"<div style='position: relative; top: 52%; margin-left: auto; margin-right: auto'><p>Now you will do the actual experiment. " +
-				"<br>This part does not have a correct or incorrect answer. Rather, you choose whether the word matches your belief about the religion.</p>" +
+				"<br>This part does not have a correct or incorrect answer. Rather, you choose whether the word matches the religion.</p>" +
 				
 				"<br>Keep your left index left finger on the <strong>W</strong> key and your right index right finger on the <strong>O</strong> key." +
 				"<br>Items will again appear one at a time.<br><br></div>" + 
